@@ -43,11 +43,26 @@ class _AddUserPageState extends State<AddUserPage> {
         if (users.docs.isNotEmpty) {
           Map<String, dynamic> userData =
               users.docs[0].data() as Map<String, dynamic>;
-          if (userData["currentGroupId"] == group!["groupId"]) {
-            setState(() {
-              error += "$uid : 既にグループに所属しています\n";
-            });
-            continue;
+          if (group!["type"] == "Subgroup") {
+            if (userData["currentSubgroupId"].contains(group!["groupId"])) {
+              setState(() {
+                error += "$uid : 既にグループに所属しています\n";
+              });
+              continue;
+            }
+            if (userData["currentGroupId"] != group!["parentGroupId"]) {
+              setState(() {
+                error += "$uid : 親グループに所属していません\n";
+              });
+              continue;
+            }
+          } else {
+            if (userData["currentGroupId"] == group!["groupId"]) {
+              setState(() {
+                error += "$uid : 既にグループに所属しています\n";
+              });
+              continue;
+            }
           }
           await firestore
               .collection("INVITES")
@@ -103,7 +118,8 @@ class _AddUserPageState extends State<AddUserPage> {
                     },
                     icon: const Icon(Icons.arrow_back, size: 32)),
                 const Text("ユーザーを招待", style: TextStyle(fontSize: 32)),
-                const Text("登録されているユーザーに招待通知を送ります。"),
+                const Text(
+                    "登録されているユーザーに招待通知を送ります。\nサブグループの場合は親グループに属している人のみ招待できます。"),
                 Text(success, style: const TextStyle(color: Colors.green)),
                 Text(error, style: const TextStyle(color: Colors.red)),
                 const SizedBox(height: 10),

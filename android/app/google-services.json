@@ -45,7 +45,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:896146819494:android:ca8652553c0a1654af6767",
         "android_client_info": {
-          "package_name": "com.example.enca_mock"
+          "package_name": "com.fighters.spotshare"
         }
       },
       "oauth_client": [
@@ -70,7 +70,7 @@
               "client_id": "896146819494-9kvtfb1p3n1n8e077dppa7e8in7mdsp2.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.encaMock"
+                "bundle_id": "com.fighters.spotshare"
               }
             }
           ]
@@ -81,7 +81,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:896146819494:android:b89e640e3b281eafaf6767",
         "android_client_info": {
-          "package_name": "com.example.google_maps_in_flutter"
+          "package_name": "com.fighters.google_maps_in_flutter"
         }
       },
       "oauth_client": [
@@ -106,7 +106,7 @@
               "client_id": "896146819494-9kvtfb1p3n1n8e077dppa7e8in7mdsp2.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.encaMock"
+                "bundle_id": "com.fighters.spotshare"
               }
             }
           ]

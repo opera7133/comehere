@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "comehere_dev" "\0"
+            VALUE "CompanyName", "com.fighters" "\0"
+            VALUE "FileDescription", "spotshare" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "comehere_dev" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "comehere_dev.exe" "\0"
-            VALUE "ProductName", "comehere_dev" "\0"
+            VALUE "InternalName", "spotshare" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2023 com.fighters. All rights reserved." "\0"
+            VALUE "OriginalFilename", "spotshare.exe" "\0"
+            VALUE "ProductName", "spotshare" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

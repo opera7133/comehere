@@ -237,14 +237,6 @@ class _MapsPageState extends State<MapsPage> {
       return Stream.value(myMarker);
     }
 
-    // グループメンバーのマーカーを作成
-    var usersRef = firestore
-        .collection("USERS")
-        .where("currentGroupId", isEqualTo: _myGroup)
-        .snapshots();
-    var memberMarkers = usersRef
-        .map((event) => event.docs.map((e) => _convertToMarker(e)).toSet());
-
     // メイングループの目的地のマーカーを作成
     var mainGroupSnapshot =
         firestore.collection("GROUPS").doc(_myGroup).snapshots();
@@ -255,11 +247,20 @@ class _MapsPageState extends State<MapsPage> {
 
       marker.add(Marker(
         markerId: MarkerId(_myGroup),
+        infoWindow: InfoWindow(title: "目的地：${event.get("name")}"),
         position: LatLng(dest.latitude, dest.longitude),
       ));
 
       return marker;
     });
+
+    // グループメンバーのマーカーを作成
+    var usersRef = firestore
+        .collection("USERS")
+        .where("currentGroupId", isEqualTo: _myGroup)
+        .snapshots();
+    var memberMarkers = usersRef.map((event) =>
+        event.docs.map((e) => _convertToMarker(e, mainGroupSnapshot)).toSet());
 
     // ストリームを繋げる
     var mergeStream1 = Rx.combineLatest2(
@@ -285,6 +286,7 @@ class _MapsPageState extends State<MapsPage> {
           return Marker(
               markerId: MarkerId(id),
               position: LatLng(dest.latitude, dest.longitude),
+              infoWindow: InfoWindow(title: "サブグループ：${e.get("name")}"),
               icon: BitmapDescriptor.defaultMarkerWithHue(25));
         }).toSet());
 
@@ -298,7 +300,8 @@ class _MapsPageState extends State<MapsPage> {
   }
 
   // データをmarkerに変更する
-  Marker _convertToMarker(QueryDocumentSnapshot user) {
+  Marker _convertToMarker(
+      QueryDocumentSnapshot user, Stream<DocumentSnapshot> mainGroupSnapshot) {
     String id = user.get("userId");
     GeoPoint position = user.get("location");
     // double color = id == _myId
@@ -311,10 +314,16 @@ class _MapsPageState extends State<MapsPage> {
         : _isMatchSubgroups(user)
             ? lightBlueIcon
             : blueIcon;
-
+    Stream<DocumentSnapshot<Object?>> arrivalTimes =
+        mainGroupSnapshot.map((event) => event.get("arrivalTimes"));
+    // get arrivaltime[userId]
     return Marker(
       markerId: MarkerId(id),
       position: LatLng(position.latitude, position.longitude),
+      infoWindow: InfoWindow(
+          title: user.get("name"),
+          snippet:
+              "到着予定時刻：${arrivalTimes.map((event) => event.get(id)) ?? "未定"}"),
       // icon: BitmapDescriptor.defaultMarkerWithHue(color));
       icon: icon,
     );

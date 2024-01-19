@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:comehere_dev/add_user.dart';
-import 'package:comehere_dev/sub_group.dart';
+import 'add_user.dart';
+import 'sub_group.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -233,6 +233,51 @@ class _GroupPageState extends State<GroupPage> {
                                                                 ])
                                                               });
                                                         }
+                                                        // get subgroups
+                                                        var subGroups = firestore
+                                                            .collection(
+                                                                "GROUPS")
+                                                            .where(
+                                                                "parentGroupId",
+                                                                isEqualTo: group![
+                                                                    "groupId"])
+                                                            .snapshots();
+                                                        subGroups
+                                                            .listen((event) {
+                                                          for (var element
+                                                              in event.docs) {
+                                                            batch.delete(element
+                                                                .reference);
+                                                            var subGroupUsers = firestore
+                                                                .collection(
+                                                                    "USERS")
+                                                                .where(
+                                                                    "currentSubgroupId",
+                                                                    arrayContains:
+                                                                        element[
+                                                                            "groupId"])
+                                                                .snapshots();
+                                                            subGroupUsers
+                                                                .listen(
+                                                                    (event) {
+                                                              for (var element
+                                                                  in event
+                                                                      .docs) {
+                                                                batch.update(
+                                                                    element
+                                                                        .reference,
+                                                                    {
+                                                                      "currentSubgroupId":
+                                                                          FieldValue
+                                                                              .arrayRemove([
+                                                                        element[
+                                                                            "groupId"]
+                                                                      ])
+                                                                    });
+                                                              }
+                                                            });
+                                                          }
+                                                        });
                                                         batch.commit();
                                                         firestore
                                                             .collection("USERS")
@@ -265,6 +310,10 @@ class _GroupPageState extends State<GroupPage> {
                           zoom: 15,
                         ),
                         markers: markers,
+                        rotateGesturesEnabled: false,
+                        scrollGesturesEnabled: false,
+                        zoomGesturesEnabled: false,
+                        tiltGesturesEnabled: false,
                         onMapCreated: (GoogleMapController controller) {
                           _controller.complete(controller);
                         },

@@ -1,4 +1,4 @@
-package com.example.comehere_dev
+package com.fighters.spotshare
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -177,18 +177,33 @@ class _SubGroupPageState extends State<SubGroupPage> {
                                                                 .doc(group![
                                                                     "groupId"])
                                                                 .delete();
-                                                            firestore
-                                                                .collection(
-                                                                    "USERS")
-                                                                .doc(widget
-                                                                    .user?.uid)
-                                                                .update({
-                                                              "currentSubgroupId":
-                                                                  FieldValue
-                                                                      .arrayRemove([
-                                                                group![
-                                                                    "groupId"]
-                                                              ])
+                                                            // get group users
+                                                            getGroupUsers(group![
+                                                                    "groupId"])
+                                                                .then((value) {
+                                                              if (value !=
+                                                                  null) {
+                                                                for (int i = 0;
+                                                                    i <
+                                                                        value
+                                                                            .length;
+                                                                    i++) {
+                                                                  firestore
+                                                                      .collection(
+                                                                          "USERS")
+                                                                      .doc(value[
+                                                                              i]![
+                                                                          "userId"])
+                                                                      .update({
+                                                                    "currentSubgroupId":
+                                                                        FieldValue
+                                                                            .arrayRemove([
+                                                                      group![
+                                                                          "groupId"]
+                                                                    ])
+                                                                  });
+                                                                }
+                                                              }
                                                             });
                                                             Navigator.pop(
                                                                 context);
@@ -216,6 +231,10 @@ class _SubGroupPageState extends State<SubGroupPage> {
                               zoom: 15,
                             ),
                             markers: markers,
+                            rotateGesturesEnabled: false,
+                            scrollGesturesEnabled: false,
+                            zoomGesturesEnabled: false,
+                            tiltGesturesEnabled: false,
                             onMapCreated: (GoogleMapController controller) {
                               _controller.complete(controller);
                             },

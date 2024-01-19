@@ -56,7 +56,7 @@ class _EditGroupPageState extends State<EditGroupPage> {
             ))
                 .then(
               (value) {
-                Future.delayed(const Duration(microseconds: 10), () {
+                Future.delayed(const Duration(microseconds: 500), () {
                   setState(() {
                     _groupAddressController.text = group!['address'] ?? '';
                   });
